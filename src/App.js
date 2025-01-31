@@ -19,7 +19,7 @@ function App() {
 
   const fetchAllTasks = async () => {
     try {
-      const response = await fetch("https://project-productivity-backend.vercel.app/all-tasks"); // Updated API URL
+      const response = await fetch("https://project-productivity-backend.vercel.app/all-tasks");
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -29,7 +29,7 @@ function App() {
 
   const markAsCompleted = async (taskId) => {
     try {
-      const response = await fetch(`https://project-productivity-backend.vercel.app/update-task/${taskId}`, { // Updated API URL
+      const response = await fetch(`https://project-productivity-backend.vercel.app/update-task/${taskId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completeDate: todayDate }),
@@ -57,7 +57,7 @@ function App() {
     console.log("📩 Sending Data:", formData);
 
     try {
-      const response = await fetch("https://project-productivity-backend.vercel.app/save-task", { // Updated API URL
+      const response = await fetch("https://project-productivity-backend.vercel.app/save-task", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -75,8 +75,6 @@ function App() {
     }
   };
 
-
-
   // Calculate daily score
   const dailyScore = tasks
     .filter(task => task.completeDate === todayDate)
@@ -85,36 +83,27 @@ function App() {
   // Progress bar calculation
   const maxScore = 10;
   const progressPercentage = Math.min((dailyScore / maxScore) * 100, 100);
-  const extraPercentage = dailyScore > maxScore ? ((dailyScore - maxScore) / maxScore) * 100 : 0;
 
-  // Filter tasks
-  const comingTasks = tasks.filter(task => !task.completeDate).sort((a, b) => {
-    const categoryOrder = { "Work": 1, "Financial Management": 2, "Exercise": 3, "Urbeplan": 4, "Health": 5 };
-    return (categoryOrder[a.category] || 6) - (categoryOrder[b.category] || 6);
-  });
-
+  // Filter completed tasks
   const completedTasks = tasks.filter(task => task.completeDate);
 
   return (
-
-    
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", backgroundColor: "#D5FFD0" }}>
       
       {/* Header */}
       <div style={{ backgroundColor: "#164B60", color: "white", padding: "30px", textAlign: "center", fontSize: "28px", fontWeight: "bold" }}>
         Productivity App
       </div>
+
       {/* All content below header*/}
       <div style={{ display: "flex", flex: 1, padding: "2% 2%", backgroundColor: "#4FC0D0" }}> 
         
         {/* Left Side - Application Visibility */}
         <div style={{ width: "70%", paddingRight: "3%" }}>
           
-          {/* What is Coming */}
-          {/* Completed Tasks Section */}
-          {/* Completed Tasks Section */}
+          {/* Open Tasks Section */}
           <div className="rounded-box">
-          <h3>Open Tasks</h3>
+            <h3>Open Tasks</h3>
             {tasks.filter(task => !task.completeDate).length > 0 ? (
               <table border="1" style={{ width: "100%", marginTop: "10px", backgroundColor: "#164B60", color: "white", borderCollapse: "collapse" }}>
                 <thead>
@@ -130,7 +119,7 @@ function App() {
                   {tasks
                     .filter(task => !task.completeDate)
                     .map((task, index) => (
-                      <tr key={index} style={{ backgroundColor: "White", color: "Black" }}> {/* White green background */}
+                      <tr key={index} style={{ backgroundColor: "White", color: "Black" }}>
                         <td>{task.dueDate}</td>
                         <td>{task.description}</td>
                         <td>{task.category}</td>
@@ -144,15 +133,12 @@ function App() {
                         </td>
                       </tr>
                     ))}
-                          </tbody>
-                  </table>
-                ) : (
-                  <p>No tasks due today.</p> // ✅ Corrected message placement
-                )}
- 
+                </tbody>
+              </table>
+            ) : (
+              <p>No tasks due today.</p>
+            )}
           </div>
-
-
 
           {/* Score Progress Bar & Completed Tasks */}
           <div className="rounded-box">
@@ -183,7 +169,7 @@ function App() {
                 </tbody>
               </table>
             ) : (
-              <p>No completed tasks today.</p>  // ✅ Corrected structure
+              <p>No completed tasks today.</p>
             )}
           </div>
 
@@ -195,13 +181,8 @@ function App() {
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <label><strong>Due Date:</strong></label>
             <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} required />
-
-            <label><strong>Complete Date:</strong></label>
-            <input type="date" name="completeDate" value={formData.completeDate} onChange={handleChange} />
-
             <label><strong>Description:</strong></label>
             <textarea name="description" value={formData.description} onChange={handleChange} required />
-
             <label><strong>Category:</strong></label>
             <select name="category" value={formData.category} onChange={handleChange}>
               <option value="Work">Work</option>
@@ -210,14 +191,6 @@ function App() {
               <option value="Financial Management">Financial Management</option>
               <option value="Exercise">Exercise</option>
             </select>
-
-            <label><strong>Time Commitment:</strong></label>
-            <select name="timeCommitment" value={formData.timeCommitment} onChange={handleChange}>
-              {[...Array(11).keys()].map((num) => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
-
             <button type="submit" style={{ backgroundColor: "#0D9276", color: "white", padding: "10px", border: "none", cursor: "pointer" }}>
               Submit
             </button>
