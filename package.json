@@ -1,36 +1,25 @@
 {
-<<<<<<< HEAD
-  "name": "backend",
+  "name": "project-productivity",
   "version": "1.0.0",
+  "private": true,
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
+    "agenda": "^5.0.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "cra-template": "1.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.13.0",
     "mongoose": "^8.9.5",
-    "react-scripts": "^5.0.1"
-=======
-  "name": "project-productivity",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "agenda": "^5.0.0",
-    "cra-template": "1.2.0",
-    "dotenv": "^16.4.7",
-    "mongoose": "^8.9.5",
     "nodemailer": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -57,13 +46,7 @@
       "last 1 safari version"
     ]
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "engines": {
     "node": "22.x"
->>>>>>> a4e800ab (Push frontend code)
   }
 }
