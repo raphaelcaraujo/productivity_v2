@@ -1,91 +1,112 @@
-<<<<<<< HEAD
 require("dotenv").config(); // Load environment variables
 const express = require("express");
-const cors = require("cors"); // ✅ Import CORS at the top
+const cors = require("cors");
 const mongoose = require("mongoose");
 
-const app = express(); // ✅ Initialize app FIRST
+const app = express();
 
-app.use(cors()); // ✅ Use CORS after initializing `app`
-app.use(express.json()); // ✅ Middleware for parsing JSON
+// ✅ Middleware
+app.use(cors()); // Enable CORS for frontend access
+app.use(express.json()); // Parse incoming JSON requests
+
+// ✅ Ensure MONGO_URI exists
+if (!process.env.MONGO_URI) {
+  console.error("❌ ERROR: MONGO_URI is not defined in environment variables!");
+  process.exit(1);
+}
 
 // ✅ Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((error) => console.error("❌ MongoDB Connection Error:", error));
+  .catch((error) => {
+    console.error("❌ MongoDB Connection Error:", error);
+    process.exit(1);
+  });
 
-// Define Task model
-const Task = mongoose.model("Task", {
-  dueDate: String,
-  completeDate: String,
-  description: String,
-  category: String,
-  timeCommitment: Number,
+// ✅ Define Task Schema & Model
+const taskSchema = new mongoose.Schema({
+  dueDate: { type: String, required: true },
+  completeDate: { type: String, default: null },
+  description: { type: String, required: true },
+  category: { type: String, required: true },
+  timeCommitment: { type: Number, default: 0 },
 });
 
-// ✅ Route to handle form submission
-app.post("/save-task", async (req, res) => {
+const Task = mongoose.model("Task", taskSchema);
+
+// ✅ Root Route for API Check
+app.get("/", (req, res) => {
+  res.json({
+    message: "✅ Productivity API is running!",
+    endpoints: {
+      saveTask: "/api/save-task",
+      allTasks: "/api/all-tasks",
+      updateTask: "/api/update-task/:id",
+    },
+  });
+});
+
+// ✅ Route to handle form submission (Create Task)
+app.post("/api/save-task", async (req, res) => {
   try {
-    console.log("📩 Form Data Received:", req.body); // Debugging
+    console.log("📩 Form Data Received:", req.body);
 
-    const newTask = new Task(req.body);
-    await newTask.save(); // ✅ Save to MongoDB
+    const { dueDate, description, category, timeCommitment } = req.body;
 
-    console.log("✅ Task Saved to MongoDB:", newTask); // Debugging
-    res.status(201).json({ message: "✅ Task saved successfully!" });
+    if (!dueDate || !description || !category) {
+      return res.status(400).json({ error: "❌ Missing required fields" });
+    }
+
+    const newTask = new Task({ dueDate, description, category, timeCommitment: timeCommitment || 0 });
+
+    await newTask.save();
+    console.log("✅ Task Saved:", newTask);
+
+    res.status(201).json({ message: "✅ Task saved successfully!", task: newTask });
   } catch (error) {
     console.error("❌ Save Error:", error);
     res.status(500).json({ error: "❌ Failed to save task" });
   }
 });
 
-// ✅ Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-
-app.get("/all-tasks", async (req, res) => {
+// ✅ Fetch all tasks (Read)
+app.get("/api/all-tasks", async (req, res) => {
   try {
-    const tasks = await Task.find({}); // Fetch all tasks
-    console.log("📤 Sending tasks:", tasks); // Debugging: Check if tasks are returned
+    const tasks = await Task.find({});
+    console.log("📤 Sending tasks:", tasks);
     res.json(tasks);
   } catch (error) {
     console.error("❌ Error retrieving tasks:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "❌ Server error" });
   }
 });
 
-app.put("/update-task/:id", async (req, res) => {
+// ✅ Update a task (Complete Task)
+app.put("/api/update-task/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { completeDate } = req.body;
 
     const updatedTask = await Task.findByIdAndUpdate(
       id,
-      { completeDate: completeDate },
-      { new: true } // Return the updated document
+      { completeDate },
+      { new: true }
     );
 
     if (!updatedTask) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: "❌ Task not found" });
     }
 
-    res.json(updatedTask);
+    res.json({ message: "✅ Task updated successfully!", task: updatedTask });
   } catch (error) {
     console.error("❌ Error updating task:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "❌ Server error" });
   }
 });
 
-=======
-const http = require("http");
+// ✅ Start the server (For Local Testing)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
 
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Hello, Node.js Server!");
-});
-
-server.listen(3000, () => {
-    console.log("Server running at http://localhost:3000/");
-});
->>>>>>> a4e800ab (Push frontend code)
+module.exports = app; // ✅ Export for Vercel
