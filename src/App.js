@@ -19,7 +19,7 @@ function App() {
 
   const fetchAllTasks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/all-tasks");
+      const response = await fetch("https://project-productivity-backend.vercel.app/all-tasks"); // Updated API URL
       const data = await response.json();
       setTasks(data);
     } catch (error) {
@@ -29,7 +29,7 @@ function App() {
 
   const markAsCompleted = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:5000/update-task/${taskId}`, {
+      const response = await fetch(`https://project-productivity-backend.vercel.app/update-task/${taskId}`, { // Updated API URL
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completeDate: todayDate }),
@@ -57,7 +57,7 @@ function App() {
     console.log("📩 Sending Data:", formData);
 
     try {
-      const response = await fetch("http://localhost:5000/save-task", {
+      const response = await fetch("https://project-productivity-backend.vercel.app/save-task", { // Updated API URL
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -74,6 +74,8 @@ function App() {
       alert("An error occurred while submitting the form.");
     }
   };
+
+
 
   // Calculate daily score
   const dailyScore = tasks
