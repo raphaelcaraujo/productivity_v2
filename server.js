@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require("dotenv").config(); // Load environment variables
 const express = require("express");
 const cors = require("cors"); // ✅ Import CORS at the top
@@ -76,3 +77,15 @@ app.put("/update-task/:id", async (req, res) => {
   }
 });
 
+=======
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Hello, Node.js Server!");
+});
+
+server.listen(3000, () => {
+    console.log("Server running at http://localhost:3000/");
+});
+>>>>>>> a4e800ab (Push frontend code)

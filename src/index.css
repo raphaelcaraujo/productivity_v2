@@ -1,0 +1,27 @@
+/* index.css - Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
+  button {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  .rounded-box {
+    background-color: #f6f6f6eb; /* Light Gray */
+    border-radius: 12px; /* Rounded Corners */
+    padding: 20px; /* Internal Spacing */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Soft Shadow */
+    border: 1px solid #ccc; /* Light Border */
+    margin-bottom: 2%;
+  }
